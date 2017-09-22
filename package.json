@@ -1,0 +1,12 @@
+{
+  "name": "node-appartment-checker",
+  "version": "0.0.1",
+  "description": "Checks lun.ua for new apartments each N minutes",
+  "main": "server.js",
+  "author": "ynotLeft",
+  "dependencies": {
+    "request": "latest",
+    "cheerio": "latest",
+    "nodemailer": "latest"
+  }
+}
