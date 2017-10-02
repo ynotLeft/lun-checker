@@ -1,6 +1,6 @@
 {
   "name": "node-appartment-checker",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Checks lun.ua for new apartments each N minutes and sends links to email",
   "main": "server.js",
   "author": "ynotLeft",

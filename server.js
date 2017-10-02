@@ -43,7 +43,6 @@ const host = "https://www.lun.ua/a";
     }
 
     function isFreshApartment(addTime, currentDate) {
-        console.log(currentDate, addTime, currentDate - addTime);
         return currentDate - addTime <= constants.interval;
     }
 
