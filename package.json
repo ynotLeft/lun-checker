@@ -1,7 +1,7 @@
 {
   "name": "node-appartment-checker",
-  "version": "0.0.1",
-  "description": "Checks lun.ua for new apartments each N minutes",
+  "version": "0.0.3",
+  "description": "Checks lun.ua for new apartments each N minutes and sends links to email",
   "main": "server.js",
   "author": "ynotLeft",
   "dependencies": {

@@ -13,7 +13,9 @@ const host = "https://www.lun.ua/a";
     const constants = JSON.parse(fs.readFileSync('constants.json', 'utf8'));
     let transporter;
 
-    function sendEmail(links) {
+    function sendEmail(links, linkName) {
+        transporter = setUpMailer(linkName);
+
         transporter.mailOptions.html = "<ol>";
         for (const link of links) {
             transporter.mailOptions.html += "<li><a>" + link + "</a></li>";
@@ -61,19 +63,19 @@ const host = "https://www.lun.ua/a";
         return result;
     }
 
-    function onRequestLunSuccess(html) {
+    function onRequestLunSuccess(html, linkName) {
         const freshApartmentLinks = extractApartmentLinks(html);
         if (freshApartmentLinks && freshApartmentLinks.length > 0) {
             console.log(freshApartmentLinks.length + " new apartments");
-            sendEmail(freshApartmentLinks);
+            sendEmail(freshApartmentLinks, linkName);
         }
     }
 
     function requestLun(url) {
-        request(url, function (error, response, html) {
+        request(url.link, function (error, response, html) {
             if (!error) {
                 console.log("GET page success");
-                onRequestLunSuccess(html);
+                onRequestLunSuccess(html, url.name);
             }
             else {
                 console.error(error);
@@ -81,29 +83,30 @@ const host = "https://www.lun.ua/a";
         });
     }
 
-    function setUpMailer() {
+    function setUpMailer(linkName) {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'lunupdater@gmail.com',
-                pass: 'c3td^e6QFPC+nczN+ZA&Jff^+bY%N6'
+                user: constants.sendingEmail,
+                pass: constants.sendingPassword,
             }
         });
 
         transporter.mailOptions = {
-            from: 'lunupdater@gmail.com',
+            from: constants.sendingEmail,
             to: constants.recipients.join(", "),
-            subject: 'новая квартирка ' + new Date(),
+            subject: 'новая квартирка ' + linkName + "" + new Date(),
         };
         return transporter;
     }
 
     function start() {
-        transporter = setUpMailer();
-        requestLun(constants.url);
-        setInterval(() => {
-            requestLun(constants.url);
-        }, constants.interval);
+        for (const url of constants.urls) {
+            requestLun(url);
+            setInterval(() => {
+                requestLun(url);
+            }, constants.interval);
+        }
     }
 
     start();
